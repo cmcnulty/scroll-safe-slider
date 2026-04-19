@@ -45,7 +45,7 @@
     border-radius: var(--border-radius);
 
     &.ready {
-      animation: ready-pop ease-out;
+      animation: ready-pop 300ms ease-out;
     }
   }
 

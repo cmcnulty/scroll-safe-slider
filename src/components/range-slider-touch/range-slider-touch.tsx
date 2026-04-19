@@ -135,28 +135,13 @@ export class RangeSliderTouchComponent {
     const rect = this.elSlider.getBoundingClientRect();
     const moveFn = this.sliderMove.bind(this, rect);
 
-    const trackMove = (e: TouchEvent) => {
-      const deltaX = Math.abs(e.touches[0].clientX - startX);
-      const deltaY = Math.abs(e.touches[0].clientY - startY);
-      if (deltaX > 0 || deltaY > 0) {
-        const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
-        if (angle > 20) {
-          clearTimeout(activationTimer);
-          window.removeEventListener('touchmove', trackMove);
-          canceled = true;
-          this.pressing = false;
-        }
-      }
-    };
-    window.addEventListener('touchmove', trackMove);
-
-    const activationTimer = setTimeout(() => {
+    const activate = (e: TouchEvent) => {
       window.removeEventListener('touchmove', trackMove);
       activated = true;
       this.pressing = false;
       this.ready = true;
-      setTimeout(() => { this.ready = false; }, this.time);
-      this.sliderMove(rect, event);
+      setTimeout(() => { this.ready = false; }, 300);
+      this.sliderMove(rect, e);
       window.addEventListener('touchmove', moveFn);
 
       const onTouchEnd = (e: TouchEvent) => {
@@ -167,7 +152,27 @@ export class RangeSliderTouchComponent {
 
       window.addEventListener('touchend', onTouchEnd, { once: true });
       this.active = true;
-    }, this.time);
+    };
+
+    const trackMove = (e: TouchEvent) => {
+      const deltaX = Math.abs(e.touches[0].clientX - startX);
+      const deltaY = Math.abs(e.touches[0].clientY - startY);
+      if (deltaX > 0 || deltaY > 0) {
+        const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+        if (angle > 20) {
+          clearTimeout(activationTimer);
+          window.removeEventListener('touchmove', trackMove);
+          canceled = true;
+          this.pressing = false;
+        } else {
+          clearTimeout(activationTimer);
+          activate(e);
+        }
+      }
+    };
+    window.addEventListener('touchmove', trackMove);
+
+    const activationTimer = setTimeout(() => activate(event), this.time);
 
     window.addEventListener(
       'touchend',
@@ -188,12 +193,13 @@ export class RangeSliderTouchComponent {
     const scaleY = expanded ? 1 : 0.2;
     const thumbScale = expanded ? 0 : 1;
     const pos = this.percent - 100;
-    const pressTransition = this.pressing ? `transform ${this.time}ms linear` : undefined;
+    const pressDelay = 80;
+    const pressTransition = this.pressing ? `transform ${this.time - pressDelay}ms linear ${pressDelay}ms` : undefined;
 
     return (
       <Host class={{ active: this.active, touch: this.touch, disabled: this.disabled }}>
         <div class='slider' ref={(el) => (this.elSlider = el as HTMLInputElement)}>
-          <div class={{ range: true, ready: this.ready }} style={{ animationDuration: this.ready ? `${this.time}ms` : undefined }}>
+          <div class={{ range: true, ready: this.ready }}>
             <div class='track' style={{ transform: `scaleY(${scaleY})`, transition: pressTransition }}>
               <div class='back'></div>
               <div class='fore' style={{ transform: `translateX(${pos}%)` }}></div>
