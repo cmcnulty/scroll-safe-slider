@@ -40,6 +40,8 @@ export class RangeSliderTouchComponent {
   @State() percent = 0;
   @State() active = false;
   @State() touch = false;
+  @State() pressing = false;
+  @State() ready = false;
 
   /** Used for change detection. */
   private _value?: number;
@@ -123,17 +125,43 @@ export class RangeSliderTouchComponent {
     }
 
     this.touch = true;
-    let moved = false;
+    this.pressing = true;
+
+    const startX = event.touches[0].clientX;
+    const startY = event.touches[0].clientY;
+    let canceled = false;
+    let activated = false;
+
     const rect = this.elSlider.getBoundingClientRect();
     const moveFn = this.sliderMove.bind(this, rect);
 
-    const timer = setTimeout(() => {
+    const trackMove = (e: TouchEvent) => {
+      const deltaX = Math.abs(e.touches[0].clientX - startX);
+      const deltaY = Math.abs(e.touches[0].clientY - startY);
+      if (deltaX > 0 || deltaY > 0) {
+        const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+        if (angle > 20) {
+          clearTimeout(activationTimer);
+          window.removeEventListener('touchmove', trackMove);
+          canceled = true;
+          this.pressing = false;
+        }
+      }
+    };
+    window.addEventListener('touchmove', trackMove);
+
+    const activationTimer = setTimeout(() => {
+      window.removeEventListener('touchmove', trackMove);
+      activated = true;
+      this.pressing = false;
+      this.ready = true;
+      setTimeout(() => { this.ready = false; }, this.time);
       this.sliderMove(rect, event);
       window.addEventListener('touchmove', moveFn);
 
-      const onTouchEnd = (event: TouchEvent) => {
+      const onTouchEnd = (e: TouchEvent) => {
         window.removeEventListener('touchmove', moveFn);
-        this.sliderMove(rect, event, true);
+        this.sliderMove(rect, e, true);
         this.active = false;
       };
 
@@ -143,41 +171,37 @@ export class RangeSliderTouchComponent {
 
     window.addEventListener(
       'touchend',
-      (event) => {
-        clearTimeout(timer);
-        if (!moved) {
-          this.sliderMove(rect, event, true);
+      (e) => {
+        clearTimeout(activationTimer);
+        window.removeEventListener('touchmove', trackMove);
+        this.pressing = false;
+        if (!canceled && !activated) {
+          this.sliderMove(rect, e, true);
         }
-      },
-      { once: true },
-    );
-    window.addEventListener(
-      'touchmove',
-      () => {
-        clearTimeout(timer);
-        moved = true;
       },
       { once: true },
     );
   }
 
   render() {
-    const scaleY = this.touch && this.active ? 1 : 0.2;
-    const thumbScale = this.touch && this.active ? 0 : 1;
+    const expanded = this.touch && (this.active || this.pressing);
+    const scaleY = expanded ? 1 : 0.2;
+    const thumbScale = expanded ? 0 : 1;
     const pos = this.percent - 100;
+    const pressTransition = this.pressing ? `transform ${this.time}ms linear` : undefined;
 
     return (
       <Host class={{ active: this.active, touch: this.touch, disabled: this.disabled }}>
         <div class='slider' ref={(el) => (this.elSlider = el as HTMLInputElement)}>
-          <div class='range'>
-            <div class='track' style={{ transform: `scaleY(${scaleY})` }}>
+          <div class={{ range: true, ready: this.ready }} style={{ animationDuration: this.ready ? `${this.time}ms` : undefined }}>
+            <div class='track' style={{ transform: `scaleY(${scaleY})`, transition: pressTransition }}>
               <div class='back'></div>
               <div class='fore' style={{ transform: `translateX(${pos}%)` }}></div>
             </div>
           </div>
 
-          <div class='thumb' style={{ transform: `translateX(${pos}%)` }}>
-            <div class='handle' part='thumb' style={{ transform: `scale(${thumbScale})` }}></div>
+          <div class='thumb' style={{ transform: `translateX(${pos}%)`, transition: pressTransition }}>
+            <div class='handle' part='thumb' style={{ transform: `scale(${thumbScale})`, transition: pressTransition }}></div>
           </div>
         </div>
       </Host>

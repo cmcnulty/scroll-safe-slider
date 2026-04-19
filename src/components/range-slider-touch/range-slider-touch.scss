@@ -24,6 +24,12 @@
   }
 }
 
+@keyframes ready-pop {
+  0%   { transform: scaleY(1); }
+  35%  { transform: scaleY(1.4); }
+  100% { transform: scaleY(1); }
+}
+
 .slider {
   position: relative;
   width: 100%;
@@ -37,6 +43,10 @@
     height: 100%;
     overflow: hidden;
     border-radius: var(--border-radius);
+
+    &.ready {
+      animation: ready-pop ease-out;
+    }
   }
 
   .track {
