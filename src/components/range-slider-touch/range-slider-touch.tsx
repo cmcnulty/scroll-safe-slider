@@ -93,6 +93,57 @@ export class RangeSliderTouchComponent {
     }
   }
 
+  @Listen('keydown')
+  onKeyDown(event: KeyboardEvent) {
+    if (this.disabled) {
+      return;
+    }
+
+    const largeStep = (this.max - this.min) / 10;
+    let newValue: number;
+
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowUp':
+        newValue = this.value + this.step;
+        break;
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        newValue = this.value - this.step;
+        break;
+      case 'PageUp':
+        newValue = this.value + largeStep;
+        break;
+      case 'PageDown':
+        newValue = this.value - largeStep;
+        break;
+      case 'Home':
+        newValue = this.min;
+        break;
+      case 'End':
+        newValue = this.max;
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+
+    if (this.step) {
+      newValue = Math.round((newValue - this.min) / this.step) * this.step + this.min;
+    }
+    newValue = clamp(newValue, this.min, this.max);
+
+    if (newValue !== this.value) {
+      this.value = newValue;
+      this.toPercent();
+      this._valueInput = this.value;
+      this._value = this.value;
+      this.input.emit({ value: this.value });
+      this.change.emit({ value: this.value });
+    }
+  }
+
   @Listen('mousedown')
   onMouseDown(event: MouseEvent) {
     if (this.disabled) {
@@ -197,7 +248,15 @@ export class RangeSliderTouchComponent {
     const pressTransition = this.pressing ? `transform ${this.time - pressDelay}ms linear ${pressDelay}ms` : undefined;
 
     return (
-      <Host class={{ active: this.active, touch: this.touch, disabled: this.disabled }}>
+      <Host
+        class={{ active: this.active, touch: this.touch, disabled: this.disabled }}
+        tabIndex={this.disabled ? -1 : 0}
+        role='slider'
+        aria-valuemin={this.min}
+        aria-valuemax={this.max}
+        aria-valuenow={this.value}
+        aria-disabled={this.disabled}
+      >
         <div class='slider' ref={(el) => (this.elSlider = el as HTMLInputElement)}>
           <div class={{ range: true, ready: this.ready }}>
             <div class='track' style={{ transform: `scaleY(${scaleY})`, transition: pressTransition }}>
