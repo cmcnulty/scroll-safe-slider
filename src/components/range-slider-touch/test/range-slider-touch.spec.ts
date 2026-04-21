@@ -195,8 +195,8 @@ describe('keyboard navigation', () => {
     const { root, waitForChanges } = await newSliderPage('<scroll-safe-slider value="50"></scroll-safe-slider>');
     const inputSpy = jest.fn();
     const changeSpy = jest.fn();
-    root.addEventListener('sliderInput', inputSpy);
-    root.addEventListener('sliderChange', changeSpy);
+    root.addEventListener('input', inputSpy);
+    root.addEventListener('change', changeSpy);
     await pressKey(root, 'ArrowRight');
     await waitForChanges();
     expect(inputSpy).toHaveBeenCalledTimes(1);
@@ -270,13 +270,6 @@ describe('touch angle detection', () => {
     }));
   }
 
-  it('sets pressing true on touchstart', async () => {
-    const { root, rootInstance, waitForChanges } = await newSliderPage('<scroll-safe-slider></scroll-safe-slider>');
-    fireTouchStart(root, 50, 0);
-    await waitForChanges();
-    expect(rootInstance.pressing).toBe(true);
-  });
-
   it('cancels on vertical swipe (angle > 20°)', async () => {
     const { root, rootInstance, waitForChanges } = await newSliderPage('<scroll-safe-slider></scroll-safe-slider>');
     fireTouchStart(root, 50, 0);
@@ -284,7 +277,6 @@ describe('touch angle detection', () => {
     // Vertical move: deltaX=2, deltaY=20 → angle ≈ 84°
     fireTouchMove(52, 20);
     await waitForChanges();
-    expect(rootInstance.pressing).toBe(false);
     expect(rootInstance.active).toBe(false);
   });
 
@@ -295,7 +287,6 @@ describe('touch angle detection', () => {
     // Horizontal move: deltaX=20, deltaY=2 → angle ≈ 6°
     fireTouchMove(70, 2);
     await waitForChanges();
-    expect(rootInstance.pressing).toBe(false);
     expect(rootInstance.active).toBe(true);
   });
 });

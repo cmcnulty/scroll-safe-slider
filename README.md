@@ -45,8 +45,8 @@ import 'scroll-safe-slider';
 
 | Event | Description | Type |
 | --- | --- | --- |
-| `sliderInput` | Fires on every value change during interaction | `CustomEvent<{ value: number }>` |
-| `sliderChange` | Fires on release, only if value changed | `CustomEvent<{ value: number }>` |
+| `input` | Fires on every value change during interaction | `CustomEvent<{ value: number }>` |
+| `change` | Fires on release, only if value changed | `CustomEvent<{ value: number }>` |
 
 ## Styling
 

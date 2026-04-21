@@ -18,10 +18,10 @@
 
 ## Events
 
-| Event          | Description                              | Type                                  |
-| -------------- | ---------------------------------------- | ------------------------------------- |
-| `sliderChange` | Emits value only on release and changed. | `CustomEvent<RangeSliderChangeEvent>` |
-| `sliderInput`  | Emits value on move, press and release.  | `CustomEvent<RangeSliderChangeEvent>` |
+| Event    | Description                              | Type                                  |
+| -------- | ---------------------------------------- | ------------------------------------- |
+| `change` | Emits value only on release and changed. | `CustomEvent<RangeSliderChangeEvent>` |
+| `input`  | Emits value on move, press and release.  | `CustomEvent<RangeSliderChangeEvent>` |
 
 
 ## Shadow Parts

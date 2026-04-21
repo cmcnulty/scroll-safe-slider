@@ -33,8 +33,8 @@ export interface ScrollSafeSliderCustomEvent<T> extends CustomEvent<T> {
 }
 declare global {
     interface HTMLScrollSafeSliderElementEventMap {
-        "sliderInput": RangeSliderChangeEvent;
-        "sliderChange": RangeSliderChangeEvent;
+        "input": RangeSliderChangeEvent;
+        "change": RangeSliderChangeEvent;
     }
     interface HTMLScrollSafeSliderElement extends Components.ScrollSafeSlider, HTMLStencilElement {
         addEventListener<K extends keyof HTMLScrollSafeSliderElementEventMap>(type: K, listener: (this: HTMLScrollSafeSliderElement, ev: ScrollSafeSliderCustomEvent<HTMLScrollSafeSliderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -62,11 +62,11 @@ declare namespace LocalJSX {
         /**
           * Emits value only on release and changed.
          */
-        "onSliderChange"?: (event: ScrollSafeSliderCustomEvent<RangeSliderChangeEvent>) => void;
+        "onChange"?: (event: ScrollSafeSliderCustomEvent<RangeSliderChangeEvent>) => void;
         /**
           * Emits value on move, press and release.
          */
-        "onSliderInput"?: (event: ScrollSafeSliderCustomEvent<RangeSliderChangeEvent>) => void;
+        "onInput"?: (event: ScrollSafeSliderCustomEvent<RangeSliderChangeEvent>) => void;
         /**
           * Specifies the value granularity.
          */

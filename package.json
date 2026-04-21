@@ -1,6 +1,6 @@
 {
   "name": "scroll-safe-slider",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "A scroll-safe range slider web component with touch angle detection, keyboard navigation, and flexible styling.",
   "keywords": [
     "input",
@@ -40,7 +40,8 @@
     "puppeteer": "21.1.1"
   },
   "author": {
-    "name": "Charles McNulty"
+    "name": "Charles McNulty",
+    "url": "https://github.com/cmcnulty/scroll-safe-slider"
   },
   "contributors": [
     {

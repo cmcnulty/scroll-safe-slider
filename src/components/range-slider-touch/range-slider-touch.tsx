@@ -34,17 +34,15 @@ export class RangeSliderTouchComponent {
   }
 
   /** Emits value on move, press and release. */
-  @Event() sliderInput!: EventEmitter<RangeSliderChangeEvent>;
+  @Event({ eventName: 'input', bubbles: true, composed: true }) sliderInput!: EventEmitter<RangeSliderChangeEvent>;
   /** Emits value only on release and changed. */
-  @Event() sliderChange!: EventEmitter<RangeSliderChangeEvent>;
+  @Event({ eventName: 'change', bubbles: true, composed: true }) sliderChange!: EventEmitter<RangeSliderChangeEvent>;
 
   @Element() el!: HTMLElement;
 
   @State() percent = 0;
   @State() active = false;
   @State() touch = false;
-  @State() pressing = false;
-  @State() ready = false;
 
   /** Used for change detection. */
   private _value?: number;
@@ -179,7 +177,6 @@ export class RangeSliderTouchComponent {
     }
 
     this.touch = true;
-    this.pressing = true;
 
     const startX = event.touches[0].clientX;
     const startY = event.touches[0].clientY;
@@ -192,9 +189,6 @@ export class RangeSliderTouchComponent {
     const activate = (e: TouchEvent) => {
       window.removeEventListener('touchmove', trackMove);
       activated = true;
-      this.pressing = false;
-      this.ready = true;
-      setTimeout(() => { this.ready = false; }, 300);
       this.sliderMove(rect, e);
       window.addEventListener('touchmove', moveFn);
 
@@ -217,7 +211,6 @@ export class RangeSliderTouchComponent {
           clearTimeout(activationTimer);
           window.removeEventListener('touchmove', trackMove);
           canceled = true;
-          this.pressing = false;
         } else {
           clearTimeout(activationTimer);
           activate(e);
@@ -233,7 +226,6 @@ export class RangeSliderTouchComponent {
       (e) => {
         clearTimeout(activationTimer);
         window.removeEventListener('touchmove', trackMove);
-        this.pressing = false;
         if (!canceled && !activated) {
           this.sliderMove(rect, e, true);
         }
@@ -243,19 +235,15 @@ export class RangeSliderTouchComponent {
   }
 
   render() {
-    const expanded = this.touch && (this.active || this.pressing);
+    const expanded = this.touch && this.active;
     const thumbScale = expanded ? 0 : 1;
     const pos = this.percent - 100;
-    const pressDelay = 80;
-    const pressDuration = `${this.time - pressDelay}ms linear ${pressDelay}ms`;
-    const pressTransitionTrack = this.pressing ? `height ${pressDuration}, top ${pressDuration}` : undefined;
-    const pressTransitionScale = this.pressing ? `transform ${pressDuration}` : undefined;
 
     const tickPercents = this.ticks.map(v => ((v - this.min) / (this.max - this.min)) * 100);
 
     return (
       <Host
-        class={{ active: this.active, touch: this.touch, disabled: this.disabled || false }}
+        class={{ active: this.active, touch: this.touch, disabled: !!this.disabled }}
         tabIndex={this.disabled ? -1 : 0}
         role='slider'
         aria-valuemin={this.min}
@@ -264,8 +252,8 @@ export class RangeSliderTouchComponent {
         aria-disabled={this.disabled}
       >
         <div class='slider' ref={(el) => (this.elSlider = el as HTMLInputElement)}>
-          <div class={{ range: true, ready: this.ready }}>
-            <div class={{ track: true, expanded }} style={{ transition: pressTransitionTrack }} part='track'>
+          <div class='range'>
+            <div class={{ track: true, expanded }} part='track'>
               <div class='back' part='back'>
                 {tickPercents.map(tp => (
                   <div class='tick' style={{ left: `${tp}%` }} part='tick'></div>
@@ -280,7 +268,7 @@ export class RangeSliderTouchComponent {
           </div>
 
           <div class='thumb' style={{ transform: `translateX(${pos}%)` }}>
-            <div class='handle' part='thumb' style={{ transform: `scale(${thumbScale})`, transition: pressTransitionScale }}></div>
+            <div class='handle' part='thumb' style={{ transform: `scale(${thumbScale})` }}></div>
           </div>
         </div>
       </Host>
