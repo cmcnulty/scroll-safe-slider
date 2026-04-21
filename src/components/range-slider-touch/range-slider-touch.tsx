@@ -27,17 +27,10 @@ export class RangeSliderTouchComponent {
 
   @Prop() disabled?: boolean;
 
-  @Watch('value')
-  protected valueChanged(): void {
-    this.clampValue();
-    this.toPercent();
-  }
-
   @Watch('min')
   @Watch('max')
   protected rangeChanged(): void {
-    this.clampValue();
-    this.toPercent();
+    this.value = clamp(this.value, this.min, this.max);
   }
 
   /** Emits value on move, press and release. */
@@ -47,7 +40,6 @@ export class RangeSliderTouchComponent {
 
   @Element() el!: HTMLElement;
 
-  @State() percent = 0;
   @State() active = false;
   @State() touch = false;
 
@@ -58,16 +50,6 @@ export class RangeSliderTouchComponent {
   elSlider!: HTMLElement;
 
   componentWillLoad() {
-    this.clampValue();
-    this.toPercent();
-  }
-
-  toPercent() {
-    this.percent = ((this.value - this.min) / (this.max - this.min)) * 100;
-    this.percent = clamp(this.percent, 0, 100);
-  }
-
-  clampValue() {
     this.value = clamp(this.value, this.min, this.max);
   }
 
@@ -75,18 +57,17 @@ export class RangeSliderTouchComponent {
     // Firefox quirk: TouchEvent is not defined globally. We cannot use instanceof.
     const input = 'changedTouches' in event ? event.changedTouches[0] : event;
 
-    this.percent = ((input.clientX - rect.x) * 100) / rect.width;
-    this.percent = clamp(this.percent, 0, 100);
+    let percent = ((input.clientX - rect.x) * 100) / rect.width;
+    percent = clamp(percent, 0, 100);
 
-    this.value = this.min + (this.percent / 100) * (this.max - this.min);
+    this.value = this.min + (percent / 100) * (this.max - this.min);
 
     if (this.step) {
-      const snap = this.percent < 25 ? Math.floor : this.percent > 75 ? Math.ceil : Math.round;
+      const snap = percent < 25 ? Math.floor : percent > 75 ? Math.ceil : Math.round;
       this.value = snap((this.value - this.min) / this.step) * this.step + this.min;
     }
 
-    this.clampValue();
-    this.toPercent();
+    this.value = clamp(this.value, this.min, this.max);
 
     if (this.value !== this._valueInput) {
       this.sliderInput.emit({ value: this.value });
@@ -144,7 +125,6 @@ export class RangeSliderTouchComponent {
 
     if (newValue !== this.value) {
       this.value = newValue;
-      this.toPercent();
       this._valueInput = this.value;
       this._value = this.value;
       this.sliderInput.emit({ value: this.value });
@@ -242,9 +222,10 @@ export class RangeSliderTouchComponent {
   }
 
   render() {
+    const percent = clamp(((this.value - this.min) / (this.max - this.min)) * 100, 0, 100);
     const expanded = this.touch && this.active;
     const thumbScale = expanded ? 0 : 1;
-    const pos = this.percent - 100;
+    const pos = percent - 100;
 
     const tickPercents = this.ticks.map(v => ((v - this.min) / (this.max - this.min)) * 100);
 
