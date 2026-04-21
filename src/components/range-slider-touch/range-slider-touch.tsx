@@ -27,10 +27,17 @@ export class RangeSliderTouchComponent {
 
   @Prop() disabled?: boolean;
 
+  @Watch('value')
+  protected valueChanged(): void {
+    this.clampValue();
+    this.toPercent();
+  }
+
   @Watch('min')
   @Watch('max')
   protected rangeChanged(): void {
     this.clampValue();
+    this.toPercent();
   }
 
   /** Emits value on move, press and release. */
@@ -50,7 +57,7 @@ export class RangeSliderTouchComponent {
 
   elSlider!: HTMLElement;
 
-  connectedCallback() {
+  componentWillLoad() {
     this.clampValue();
     this.toPercent();
   }
