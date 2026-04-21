@@ -1,6 +1,6 @@
 {
   "name": "scroll-safe-slider",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A scroll-safe range slider web component with touch angle detection, keyboard navigation, and flexible styling.",
   "keywords": [
     "input",
