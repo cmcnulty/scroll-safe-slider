@@ -19,6 +19,9 @@ export class RangeSliderTouchComponent {
   /** Specifies the value granularity. */
   @Prop() step = 1;
 
+  /** Tick mark values to display along the track. */
+  @Prop() ticks: number[] = [];
+
   /** Long press time in milliseconds. */
   @Prop() time = 300;
 
@@ -35,7 +38,7 @@ export class RangeSliderTouchComponent {
   /** Emits value only on release and changed. */
   @Event() change!: EventEmitter<RangeSliderChangeEvent>;
 
-  @Element() el: HTMLElement;
+  @Element() el!: HTMLElement;
 
   @State() percent = 0;
   @State() active = false;
@@ -241,15 +244,18 @@ export class RangeSliderTouchComponent {
 
   render() {
     const expanded = this.touch && (this.active || this.pressing);
-    const scaleY = expanded ? 1 : 0.2;
     const thumbScale = expanded ? 0 : 1;
     const pos = this.percent - 100;
     const pressDelay = 80;
-    const pressTransition = this.pressing ? `transform ${this.time - pressDelay}ms linear ${pressDelay}ms` : undefined;
+    const pressDuration = `${this.time - pressDelay}ms linear ${pressDelay}ms`;
+    const pressTransitionTrack = this.pressing ? `height ${pressDuration}, top ${pressDuration}` : undefined;
+    const pressTransitionScale = this.pressing ? `transform ${pressDuration}` : undefined;
+
+    const tickPercents = this.ticks.map(v => ((v - this.min) / (this.max - this.min)) * 100);
 
     return (
       <Host
-        class={{ active: this.active, touch: this.touch, disabled: this.disabled }}
+        class={{ active: this.active, touch: this.touch, disabled: this.disabled || false }}
         tabIndex={this.disabled ? -1 : 0}
         role='slider'
         aria-valuemin={this.min}
@@ -259,14 +265,22 @@ export class RangeSliderTouchComponent {
       >
         <div class='slider' ref={(el) => (this.elSlider = el as HTMLInputElement)}>
           <div class={{ range: true, ready: this.ready }}>
-            <div class='track' style={{ transform: `scaleY(${scaleY})`, transition: pressTransition }}>
-              <div class='back'></div>
-              <div class='fore' style={{ transform: `translateX(${pos}%)` }}></div>
+            <div class={{ track: true, expanded }} style={{ transition: pressTransitionTrack }} part='track'>
+              <div class='back' part='back'>
+                {tickPercents.map(tp => (
+                  <div class='tick' style={{ left: `${tp}%` }} part='tick'></div>
+                ))}
+              </div>
+              <div class='fore' part='fill' style={{ transform: `translateX(${pos}%)` }}>
+                {tickPercents.map(tp => (
+                  <div class='tick tick-active' style={{ left: `${tp - pos}%` }} part='tick'></div>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div class='thumb' style={{ transform: `translateX(${pos}%)`, transition: pressTransition }}>
-            <div class='handle' part='thumb' style={{ transform: `scale(${thumbScale})`, transition: pressTransition }}></div>
+          <div class='thumb' style={{ transform: `translateX(${pos}%)` }}>
+            <div class='handle' part='thumb' style={{ transform: `scale(${thumbScale})`, transition: pressTransitionScale }}></div>
           </div>
         </div>
       </Host>
