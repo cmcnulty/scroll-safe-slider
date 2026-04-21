@@ -20,7 +20,7 @@ export class RangeSliderTouchComponent {
   @Prop() step = 1;
 
   /** Tick mark values to display along the track. */
-  @Prop() ticks: number[] = [];
+  @Prop({ mutable: true }) ticks: number[] = [];
 
   /** Long press time in milliseconds. */
   @Prop() time = 300;
@@ -34,9 +34,9 @@ export class RangeSliderTouchComponent {
   }
 
   /** Emits value on move, press and release. */
-  @Event() input!: EventEmitter<RangeSliderChangeEvent>;
+  @Event() sliderInput!: EventEmitter<RangeSliderChangeEvent>;
   /** Emits value only on release and changed. */
-  @Event() change!: EventEmitter<RangeSliderChangeEvent>;
+  @Event() sliderChange!: EventEmitter<RangeSliderChangeEvent>;
 
   @Element() el!: HTMLElement;
 
@@ -84,13 +84,13 @@ export class RangeSliderTouchComponent {
     this.toPercent();
 
     if (this.value !== this._valueInput) {
-      this.input.emit({ value: this.value });
+      this.sliderInput.emit({ value: this.value });
       this._valueInput = this.value;
     }
 
     if (released) {
       if (this.value !== this._value) {
-        this.change.emit({ value: this.value });
+        this.sliderChange.emit({ value: this.value });
         this._value = this.value;
       }
     }
@@ -142,8 +142,8 @@ export class RangeSliderTouchComponent {
       this.toPercent();
       this._valueInput = this.value;
       this._value = this.value;
-      this.input.emit({ value: this.value });
-      this.change.emit({ value: this.value });
+      this.sliderInput.emit({ value: this.value });
+      this.sliderChange.emit({ value: this.value });
     }
   }
 

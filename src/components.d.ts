@@ -33,8 +33,8 @@ export interface RangeSliderTouchCustomEvent<T> extends CustomEvent<T> {
 }
 declare global {
     interface HTMLRangeSliderTouchElementEventMap {
-        "input": RangeSliderChangeEvent;
-        "change": RangeSliderChangeEvent;
+        "sliderInput": RangeSliderChangeEvent;
+        "sliderChange": RangeSliderChangeEvent;
     }
     interface HTMLRangeSliderTouchElement extends Components.RangeSliderTouch, HTMLStencilElement {
         addEventListener<K extends keyof HTMLRangeSliderTouchElementEventMap>(type: K, listener: (this: HTMLRangeSliderTouchElement, ev: RangeSliderTouchCustomEvent<HTMLRangeSliderTouchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -62,11 +62,11 @@ declare namespace LocalJSX {
         /**
           * Emits value only on release and changed.
          */
-        "onChange"?: (event: RangeSliderTouchCustomEvent<RangeSliderChangeEvent>) => void;
+        "onSliderChange"?: (event: RangeSliderTouchCustomEvent<RangeSliderChangeEvent>) => void;
         /**
           * Emits value on move, press and release.
          */
-        "onInput"?: (event: RangeSliderTouchCustomEvent<RangeSliderChangeEvent>) => void;
+        "onSliderInput"?: (event: RangeSliderTouchCustomEvent<RangeSliderChangeEvent>) => void;
         /**
           * Specifies the value granularity.
          */

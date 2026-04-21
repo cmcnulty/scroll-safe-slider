@@ -230,7 +230,7 @@
       createElement({ tag: 'div', className: 'text', text, parent: labelEl });
       const valueEl = createElement({ tag: 'div', className: 'value', parent: labelEl });
       const rangeEl = createElement({ tag: 'range-slider-touch', parent: sliderEl, attr });
-      rangeEl.addEventListener('input', (event) => (valueEl.textContent = `${round(event?.detail?.value, 2)}`));
+      rangeEl.addEventListener('sliderInput', (event) => (valueEl.textContent = `${round(event?.detail?.value, 2)}`));
     }
 
     function createElement({ tag, className, parent, attr, text }) {
