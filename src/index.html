@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
   <title>Range Slider Touch</title>
 
-  <script type="module" src="/build/range-slider-touch.esm.js"></script>
-  <script nomodule src="/build/range-slider-touch.js"></script>
+  <script type="module" src="/build/scroll-safe-slider.esm.js"></script>
+  <script nomodule src="/build/scroll-safe-slider.js"></script>
 
   <style>
     html,
@@ -56,22 +56,22 @@
       opacity: 0.5;
     }
 
-    range-slider-touch {
+    scroll-safe-slider {
       color: #1f80ff;
     }
 
-    range-slider-touch.custom {
+    scroll-safe-slider.custom {
       --border-radius: 3px;
       --background-opacity: 0.1;
       color: #ffdd22;
     }
 
-    range-slider-touch.custom::part(thumb) {
+    scroll-safe-slider.custom::part(thumb) {
       display: none;
     }
 
     /* Native-style: thin track, larger thumb */
-    range-slider-touch.native-style {
+    scroll-safe-slider.native-style {
       --track-height: 4px;
       --active-track-height: 6px;
       --thumb-size: 22px;
@@ -80,7 +80,7 @@
     }
 
     /* Thick track, no thumb (progress-bar style) */
-    range-slider-touch.thick {
+    scroll-safe-slider.thick {
       --track-height: 10px;
       --active-track-height: 20px;
       --thumb-size: 20px;
@@ -88,12 +88,12 @@
       color: #22cc88;
     }
 
-    range-slider-touch.thick::part(thumb) {
+    scroll-safe-slider.thick::part(thumb) {
       display: none;
     }
 
     /* Pill / wide track */
-    range-slider-touch.pill {
+    scroll-safe-slider.pill {
       --track-height: 20px;
       --active-track-height: 20px;
       --thumb-size: 20px;
@@ -102,12 +102,12 @@
       color: #ff6644;
     }
 
-    range-slider-touch.pill::part(thumb) {
+    scroll-safe-slider.pill::part(thumb) {
       display: none;
     }
 
     /* Subtle: very thin, muted */
-    range-slider-touch.subtle {
+    scroll-safe-slider.subtle {
       --track-height: 2px;
       --active-track-height: 8px;
       --thumb-size: 14px;
@@ -160,51 +160,51 @@
 
     <div class="slider">
       <div class="label">Basic</div>
-      <range-slider-touch></range-slider-touch>
+      <scroll-safe-slider></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Values</div>
-      <range-slider-touch min="25" max="555" value="444" step="50"></range-slider-touch>
+      <scroll-safe-slider min="25" max="555" value="444" step="50"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Disabled</div>
-      <range-slider-touch disabled></range-slider-touch>
+      <scroll-safe-slider disabled></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Custom Style (no thumb)</div>
-      <range-slider-touch class="custom"></range-slider-touch>
+      <scroll-safe-slider class="custom"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Native-style (thin track, large thumb)</div>
-      <range-slider-touch class="native-style" value="60"></range-slider-touch>
+      <scroll-safe-slider class="native-style" value="60"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Thick track, no thumb</div>
-      <range-slider-touch class="thick" value="40"></range-slider-touch>
+      <scroll-safe-slider class="thick" value="40"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Pill / full-height track</div>
-      <range-slider-touch class="pill" value="70"></range-slider-touch>
+      <scroll-safe-slider class="pill" value="70"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Subtle (thin, small thumb)</div>
-      <range-slider-touch class="subtle" value="30"></range-slider-touch>
+      <scroll-safe-slider class="subtle" value="30"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Ticks every 10 (0–100)</div>
-      <range-slider-touch id="ticks-basic" value="50"></range-slider-touch>
+      <scroll-safe-slider id="ticks-basic" value="50"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Ticks at whole numbers (0–5 by 0.1)</div>
-      <range-slider-touch id="ticks-decimal" min="0" max="5" step="0.1" value="2.5"></range-slider-touch>
+      <scroll-safe-slider id="ticks-decimal" min="0" max="5" step="0.1" value="2.5"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Native-style with ticks</div>
-      <range-slider-touch id="ticks-native" class="native-style" value="50"></range-slider-touch>
+      <scroll-safe-slider id="ticks-native" class="native-style" value="50"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">touch-action: none (no scroll interference)</div>
-      <range-slider-touch style="touch-action: pan-y;" value="50"></range-slider-touch>
+      <scroll-safe-slider style="touch-action: pan-y;" value="50"></scroll-safe-slider>
     </div>
     <div class="slider">
       <div class="label">Native HTML Input Range</div>
@@ -229,7 +229,7 @@
       const labelEl = createElement({ tag: 'div', className: 'label', parent: sliderEl });
       createElement({ tag: 'div', className: 'text', text, parent: labelEl });
       const valueEl = createElement({ tag: 'div', className: 'value', parent: labelEl });
-      const rangeEl = createElement({ tag: 'range-slider-touch', parent: sliderEl, attr });
+      const rangeEl = createElement({ tag: 'scroll-safe-slider', parent: sliderEl, attr });
       rangeEl.addEventListener('sliderInput', (event) => (valueEl.textContent = `${round(event?.detail?.value, 2)}`));
     }
 

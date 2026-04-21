@@ -1,65 +1,106 @@
-# Range Slider Touch
+# scroll-safe-slider
 
 [![Version][version]][package]
 
-Range slider web component optimized for touch.
-
-![](docs/demo.gif)
-
-[Demo](https://domske.github.io/range-slider-touch/)
+A range slider web component built for touch. Detects scroll intent using touch angle — vertical swipes scroll the page, horizontal swipes activate the slider — so sliders stacked in a scrollable container work naturally without accidental value changes.
 
 ## Features
 
-- Scroll the page without accidentally changing the value.
-- Single tap for single change or long press to move.
-- Responsive size. Contains the parent size.
-- Lightweight and simple modern appearance.
-- Uses transform for performance reasons.
+- **Angle-based scroll detection** — vertical swipes pass through to native scroll instantly; horizontal swipes activate the slider immediately
+- **Long-press fallback** — holding activates the slider when no directional movement is detected
+- **Keyboard navigation** — Arrow keys, Page Up/Down, Home/End mirror native `<input type="range">` behavior
+- **Flexible styling** — CSS custom properties for track height, thumb size, and more; shadow parts for full control
+- **Tick marks** — pass an array of values to render MD-style two-color tick marks
+- Responsive, shadow DOM, zero dependencies
 
-> Disclaimer:This component is currently experimental and not yet fully tested. It was created for demo purposes. It may not work in forms or all browsers. It also doesn't support keyboard yet.
-
-## Getting Started
-
-[NPM][package]:
+## Installation
 
 ```bash
-npm i range-slider-touch
+npm i scroll-safe-slider
 ```
 
 ```ts
-import 'range-slider-touch';
-```
-
-or CDN:
-
-```html
-<script
-  type="module"
-  src="https://unpkg.com/range-slider-touch@latest/dist/range-slider-touch/range-slider-touch.esm.js"
-></script>
-<script
-  nomodule
-  src="https://unpkg.com/range-slider-touch@latest/dist/range-slider-touch/range-slider-touch.js"
-></script>
+import 'scroll-safe-slider';
 ```
 
 ## Usage
 
 ```html
-<range-slider-touch min="10" max="190" value="140" step="10"></range-slider-touch>
+<scroll-safe-slider min="0" max="100" value="50" step="1"></scroll-safe-slider>
 ```
 
-[Docs](./src/components/range-slider-touch/readme.md)
+## Properties
 
-### Angular
+| Property | Attribute | Description | Type | Default |
+| --- | --- | --- | --- | --- |
+| `value` | `value` | Current value | `number` | `50` |
+| `min` | `min` | Minimum value | `number` | `0` |
+| `max` | `max` | Maximum value | `number` | `100` |
+| `step` | `step` | Value granularity | `number` | `1` |
+| `time` | `time` | Long-press activation time (ms) | `number` | `300` |
+| `ticks` | — | Tick mark values (set via JS) | `number[]` | `[]` |
+| `disabled` | `disabled` | Disables the slider | `boolean` | `undefined` |
 
-Angular must be configured to allow custom elements. I recommend to wrap this web-component in an Angular component with its own module. But it also works in app.module.ts.
+## Events
 
-**range.module.ts**
+| Event | Description | Type |
+| --- | --- | --- |
+| `sliderInput` | Fires on every value change during interaction | `CustomEvent<{ value: number }>` |
+| `sliderChange` | Fires on release, only if value changed | `CustomEvent<{ value: number }>` |
+
+## Styling
+
+The component inherits `color` for its fill color. Available CSS custom properties:
+
+| Property | Default | Description |
+| --- | --- | --- |
+| `--track-height` | `4px` | Track height at rest |
+| `--active-track-height` | `20px` | Track height when active |
+| `--thumb-size` | `20px` | Thumb diameter |
+| `--border-radius` | `10px` | Track border radius |
+| `--background-opacity` | `0.15` | Unfilled track opacity |
+| `--tick-size` | `4px` | Tick mark diameter |
+| `--tick-active-color` | `#fff` | Tick color on the filled region |
+
+```css
+scroll-safe-slider {
+  color: #1f80ff;
+  --track-height: 4px;
+  --active-track-height: 6px;
+  --thumb-size: 22px;
+}
+```
+
+## Shadow Parts
+
+| Part | Description |
+| --- | --- |
+| `thumb` | The draggable handle |
+| `track` | The full track container |
+| `fill` | The filled (active) portion |
+| `back` | The unfilled background portion |
+| `tick` | Individual tick mark elements |
+
+```css
+scroll-safe-slider::part(thumb) {
+  display: none;
+}
+```
+
+## Tick Marks
+
+Ticks must be set programmatically:
+
+```js
+const slider = document.querySelector('scroll-safe-slider');
+slider.ticks = Array.from({ length: 11 }, (_, i) => i * 10); // every 10 units
+```
+
+## Angular
 
 ```ts
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { defineCustomElements } from 'range-slider-touch/loader';
+import { defineCustomElements } from 'scroll-safe-slider/loader';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -68,49 +109,7 @@ import { defineCustomElements } from 'range-slider-touch/loader';
 defineCustomElements();
 ```
 
-### Styles
-
-This component uses the current `color` for its color.
-
-```css
-range-slider-touch {
-  color: #2080ff;
-}
-```
-
-Some customizations:
-
-```css
-range-slider-touch {
-  --border-radius: 3px;
-  --background-opacity: 0.1;
-  color: #ffdd22;
-}
-
-range-slider-touch::part(thumb) {
-  display: none;
-}
-```
-
-### Quirks
-
-If you don't want to scroll the content during slider movements, you can prevent this by using the `touch-action` CSS property. Unfortunately, this cannot be changed dynamically in the long press event as it must be set before a touch begins.
-
-```css
-range-slider-touch {
-  touch-action: none;
-}
-```
-
-## Story
-
-The native range slider of HTML looks outdated and is not suitable for touch devices, especially when placed within a scrollable container. Scrolling can change the value of the slider unintentionally. The input range on iOS works better than on Android. I haven't seen a range slider for HTML that works well for touch. That's why I decided to build my own.
-
-I don't want to change the value of the range slider while scrolling the content. I decided to only move the slider by long pressing. The idea is simple, but you have to deal with limitations and quirks of the browsers. Preventing scrolling via touch events is not possible. And pointer events can be canceled any time. You can only use the CSS property `touch-action` to control it. But it cannot be changed dynamically. It must be set before touch start. Means, we cannot activate it during a long press. Because the range is already touching. A dilemma. I decided to allow scrolling during range movement as it's less disruptive and otherwise this component would become unnecessary.
-
-In my opinion, the HTML input range should behave like the range slider of the OS (e.g. audio settings). Maybe that will never happen. I won't wait, so I've developed an alternative here. It may not be perfect either, but it works better for touch than the original. Feel free to constribute and improve this component.
-
 <!-- Links -->
 
-[version]: https://img.shields.io/npm/v/range-slider-touch.svg?style=flat-square
-[package]: https://www.npmjs.com/package/range-slider-touch
+[version]: https://img.shields.io/npm/v/scroll-safe-slider.svg?style=flat-square
+[package]: https://www.npmjs.com/package/scroll-safe-slider

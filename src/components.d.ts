@@ -8,7 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { RangeSliderChangeEvent } from "./components/range-slider-touch/range-slider-touch";
 export { RangeSliderChangeEvent } from "./components/range-slider-touch/range-slider-touch";
 export namespace Components {
-    interface RangeSliderTouch {
+    interface ScrollSafeSlider {
         "disabled"?: boolean;
         "max": number;
         "min": number;
@@ -27,46 +27,46 @@ export namespace Components {
         "value": number;
     }
 }
-export interface RangeSliderTouchCustomEvent<T> extends CustomEvent<T> {
+export interface ScrollSafeSliderCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLRangeSliderTouchElement;
+    target: HTMLScrollSafeSliderElement;
 }
 declare global {
-    interface HTMLRangeSliderTouchElementEventMap {
+    interface HTMLScrollSafeSliderElementEventMap {
         "sliderInput": RangeSliderChangeEvent;
         "sliderChange": RangeSliderChangeEvent;
     }
-    interface HTMLRangeSliderTouchElement extends Components.RangeSliderTouch, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLRangeSliderTouchElementEventMap>(type: K, listener: (this: HTMLRangeSliderTouchElement, ev: RangeSliderTouchCustomEvent<HTMLRangeSliderTouchElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    interface HTMLScrollSafeSliderElement extends Components.ScrollSafeSlider, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLScrollSafeSliderElementEventMap>(type: K, listener: (this: HTMLScrollSafeSliderElement, ev: ScrollSafeSliderCustomEvent<HTMLScrollSafeSliderElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
         addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLRangeSliderTouchElementEventMap>(type: K, listener: (this: HTMLRangeSliderTouchElement, ev: RangeSliderTouchCustomEvent<HTMLRangeSliderTouchElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLScrollSafeSliderElementEventMap>(type: K, listener: (this: HTMLScrollSafeSliderElement, ev: ScrollSafeSliderCustomEvent<HTMLScrollSafeSliderElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
         removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-    var HTMLRangeSliderTouchElement: {
-        prototype: HTMLRangeSliderTouchElement;
-        new (): HTMLRangeSliderTouchElement;
+    var HTMLScrollSafeSliderElement: {
+        prototype: HTMLScrollSafeSliderElement;
+        new (): HTMLScrollSafeSliderElement;
     };
     interface HTMLElementTagNameMap {
-        "range-slider-touch": HTMLRangeSliderTouchElement;
+        "scroll-safe-slider": HTMLScrollSafeSliderElement;
     }
 }
 declare namespace LocalJSX {
-    interface RangeSliderTouch {
+    interface ScrollSafeSlider {
         "disabled"?: boolean;
         "max"?: number;
         "min"?: number;
         /**
           * Emits value only on release and changed.
          */
-        "onSliderChange"?: (event: RangeSliderTouchCustomEvent<RangeSliderChangeEvent>) => void;
+        "onSliderChange"?: (event: ScrollSafeSliderCustomEvent<RangeSliderChangeEvent>) => void;
         /**
           * Emits value on move, press and release.
          */
-        "onSliderInput"?: (event: RangeSliderTouchCustomEvent<RangeSliderChangeEvent>) => void;
+        "onSliderInput"?: (event: ScrollSafeSliderCustomEvent<RangeSliderChangeEvent>) => void;
         /**
           * Specifies the value granularity.
          */
@@ -82,14 +82,14 @@ declare namespace LocalJSX {
         "value"?: number;
     }
     interface IntrinsicElements {
-        "range-slider-touch": RangeSliderTouch;
+        "scroll-safe-slider": ScrollSafeSlider;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "range-slider-touch": LocalJSX.RangeSliderTouch & JSXBase.HTMLAttributes<HTMLRangeSliderTouchElement>;
+            "scroll-safe-slider": LocalJSX.ScrollSafeSlider & JSXBase.HTMLAttributes<HTMLScrollSafeSliderElement>;
         }
     }
 }

@@ -6,7 +6,7 @@ export interface RangeSliderChangeEvent {
 }
 
 @Component({
-  tag: 'range-slider-touch',
+  tag: 'scroll-safe-slider',
   styleUrl: 'range-slider-touch.scss',
   shadow: true,
 })

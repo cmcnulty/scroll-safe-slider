@@ -1,7 +1,7 @@
 {
-  "name": "range-slider-touch",
+  "name": "scroll-safe-slider",
   "version": "0.1.2",
-  "description": "Range slider web component optimized for touch.",
+  "description": "A scroll-safe range slider web component with touch angle detection, keyboard navigation, and flexible styling.",
   "keywords": [
     "input",
     "range",
@@ -10,6 +10,8 @@
     "web component",
     "touch",
     "mobile",
+    "scroll",
+    "accessible",
     "html"
   ],
   "main": "dist/index.cjs.js",
@@ -19,20 +21,11 @@
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/range-slider-touch/range-slider-touch.esm.js",
-  "homepage": "https://domske.github.io/range-slider-touch/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/domske/range-slider-touch.git"
-  },
+  "unpkg": "dist/scroll-safe-slider/scroll-safe-slider.esm.js",
   "files": [
     "dist/",
     "loader/"
   ],
-  "author": {
-    "name": "Dominik Geng",
-    "url": "https://github.com/domske"
-  },
   "scripts": {
     "stencil": "stencil",
     "build": "stencil build --docs",
@@ -43,10 +36,9 @@
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate"
   },
-  "dependencies": {
-    "@stencil/core": "^4.7.0"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@stencil/core": "^4.7.0",
     "@stencil/sass": "^3.0.9",
     "@types/jest": "^29.5.6",
     "@types/node": "^16.18.11",
@@ -54,5 +46,14 @@
     "jest-cli": "^29.7.0",
     "puppeteer": "21.1.1"
   },
+  "author": {
+    "name": "Charles McNulty"
+  },
+  "contributors": [
+    {
+      "name": "Dominik Geng",
+      "url": "https://github.com/domske"
+    }
+  ],
   "license": "MIT"
 }

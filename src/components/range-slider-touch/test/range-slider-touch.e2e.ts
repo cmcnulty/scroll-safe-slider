@@ -1,11 +1,11 @@
 import { newE2EPage } from '@stencil/core/testing';
 
-describe('range-slider-touch', () => {
+describe('scroll-safe-slider', () => {
   it('renders', async () => {
     const page = await newE2EPage();
 
-    await page.setContent('<range-slider-touch></range-slider-touch>');
-    const element = await page.find('range-slider-touch');
+    await page.setContent('<scroll-safe-slider></scroll-safe-slider>');
+    const element = await page.find('scroll-safe-slider');
     expect(element).toHaveClass('hydrated');
   });
 });
