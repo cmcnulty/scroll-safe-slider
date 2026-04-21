@@ -8,6 +8,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+:host(:focus-visible) {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: var(--border-radius);
+}
+
 :host(.disabled) {
   .slider {
     opacity: 0.5;
