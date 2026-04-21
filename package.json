@@ -1,6 +1,6 @@
 {
   "name": "scroll-safe-slider",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A scroll-safe range slider web component with touch angle detection, keyboard navigation, and flexible styling.",
   "keywords": [
     "input",
@@ -14,17 +14,10 @@
     "accessible",
     "html"
   ],
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
-  "es2015": "dist/esm/index.js",
-  "es2017": "dist/esm/index.js",
-  "types": "dist/types/index.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
-  "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/scroll-safe-slider/scroll-safe-slider.esm.js",
+  "module": "dist/scroll-safe-slider.js",
+  "types": "dist/scroll-safe-slider.d.ts",
   "files": [
-    "dist/",
-    "loader/"
+    "dist/"
   ],
   "scripts": {
     "stencil": "stencil",
