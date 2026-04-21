@@ -17,6 +17,10 @@ export namespace Components {
          */
         "step": number;
         /**
+          * Tick mark values to display along the track.
+         */
+        "ticks": number[];
+        /**
           * Long press time in milliseconds.
          */
         "time": number;
@@ -67,6 +71,10 @@ declare namespace LocalJSX {
           * Specifies the value granularity.
          */
         "step"?: number;
+        /**
+          * Tick mark values to display along the track.
+         */
+        "ticks"?: number[];
         /**
           * Long press time in milliseconds.
          */
