@@ -14,6 +14,7 @@
     "accessible",
     "html"
   ],
+  "homepage": "https://github.com/cmcnulty/scroll-safe-slider",
   "module": "dist/scroll-safe-slider.js",
   "types": "dist/scroll-safe-slider.d.ts",
   "files": [
@@ -41,7 +42,7 @@
   },
   "author": {
     "name": "Charles McNulty",
-    "url": "https://github.com/cmcnulty/scroll-safe-slider"
+    "url": "https://github.com/cmcnulty"
   },
   "contributors": [
     {
