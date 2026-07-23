@@ -121,6 +121,7 @@
       border-radius: calc(var(--thumb-size, 20px) / 2);
       background-color: currentColor;
       transition: transform 200ms;
+      pointer-events: auto;
     }
   }
 }
