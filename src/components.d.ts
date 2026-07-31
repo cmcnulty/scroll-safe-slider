@@ -10,20 +10,32 @@ export { RangeSliderChangeEvent } from "./components/range-slider-touch/range-sl
 export namespace Components {
     interface ScrollSafeSlider {
         "disabled"?: boolean;
+        /**
+          * @default 100
+         */
         "max": number;
+        /**
+          * @default 0
+         */
         "min": number;
         /**
           * Specifies the value granularity.
+          * @default 1
          */
         "step": number;
         /**
           * Tick mark values to display along the track.
+          * @default []
          */
         "ticks": number[];
         /**
           * Long press time in milliseconds.
+          * @default 300
          */
         "time": number;
+        /**
+          * @default 50
+         */
         "value": number;
     }
 }
@@ -57,7 +69,13 @@ declare global {
 declare namespace LocalJSX {
     interface ScrollSafeSlider {
         "disabled"?: boolean;
+        /**
+          * @default 100
+         */
         "max"?: number;
+        /**
+          * @default 0
+         */
         "min"?: number;
         /**
           * Emits value only on release and changed.
@@ -69,27 +87,43 @@ declare namespace LocalJSX {
         "onInput"?: (event: ScrollSafeSliderCustomEvent<RangeSliderChangeEvent>) => void;
         /**
           * Specifies the value granularity.
+          * @default 1
          */
         "step"?: number;
         /**
           * Tick mark values to display along the track.
+          * @default []
          */
         "ticks"?: number[];
         /**
           * Long press time in milliseconds.
+          * @default 300
          */
         "time"?: number;
+        /**
+          * @default 50
+         */
         "value"?: number;
     }
+
+    interface ScrollSafeSliderAttributes {
+        "value": number;
+        "min": number;
+        "max": number;
+        "step": number;
+        "time": number;
+        "disabled": boolean;
+    }
+
     interface IntrinsicElements {
-        "scroll-safe-slider": ScrollSafeSlider;
+        "scroll-safe-slider": Omit<ScrollSafeSlider, keyof ScrollSafeSliderAttributes> & { [K in keyof ScrollSafeSlider & keyof ScrollSafeSliderAttributes]?: ScrollSafeSlider[K] } & { [K in keyof ScrollSafeSlider & keyof ScrollSafeSliderAttributes as `attr:${K}`]?: ScrollSafeSliderAttributes[K] } & { [K in keyof ScrollSafeSlider & keyof ScrollSafeSliderAttributes as `prop:${K}`]?: ScrollSafeSlider[K] };
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "scroll-safe-slider": LocalJSX.ScrollSafeSlider & JSXBase.HTMLAttributes<HTMLScrollSafeSliderElement>;
+            "scroll-safe-slider": LocalJSX.IntrinsicElements["scroll-safe-slider"] & JSXBase.HTMLAttributes<HTMLScrollSafeSliderElement>;
         }
     }
 }
